@@ -121,10 +121,10 @@ class ProcedureFactoryTest extends \PHPUnit_Framework_TestCase
     protected function getRenderer()
     {
         $twig = new Twig_Environment(
-            new Twig_Loader_Array([])
+            new Twig_Loader_Array([sys_get_temp_dir()])
         );
 
-        $renderer = new TemplateRenderer($twig);
+        $renderer = new TemplateRenderer($twig, $this->getCache());
 
         return $renderer;
     }
