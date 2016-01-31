@@ -172,7 +172,7 @@ class Procedure implements ProcedureInterface
      */
     public function compile(InputInterface $input)
     {
-       return $this->renderer->render($this->getTemplate(), array('input' => $input));
+        return $this->renderer->render($this->getTemplate(), array('input' => $input));
     }
 
     /**

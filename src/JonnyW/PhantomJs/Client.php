@@ -95,11 +95,11 @@ class Client implements ClientInterface
      * @access public
      * @return \JonnyW\PhantomJs\Client
      */
-    public static function getInstance()
+    public static function getInstance($params = [])
     {
         if (!self::$instance instanceof ClientInterface) {
 
-            $serviceContainer = ServiceContainer::getInstance();
+            $serviceContainer = ServiceContainer::getInstance($params);
 
             self::$instance = new static(
                 $serviceContainer->get('engine'),

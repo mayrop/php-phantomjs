@@ -9,7 +9,8 @@
 namespace JonnyW\PhantomJs\Tests\Unit\Template;
 
 use Twig_Environment;
-use Twig_Loader_String;
+use Twig_Loader_Filesystem;
+use JonnyW\PhantomJs\Cache\FileCache;
 use JonnyW\PhantomJs\Http\Request;
 use JonnyW\PhantomJs\Template\TemplateRenderer;
 
@@ -112,7 +113,8 @@ class TemplateRendererTest extends \PHPUnit_Framework_TestCase
     protected function getTemplateRenderer()
     {
         $templateRenderer = new TemplateRenderer(
-            $this->getTwig()
+            $this->getTwig(),
+            $this->getCache()
         );
 
         return $templateRenderer;
@@ -131,6 +133,7 @@ class TemplateRendererTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
+
     /**
      * Get twig
      *
@@ -140,9 +143,25 @@ class TemplateRendererTest extends \PHPUnit_Framework_TestCase
     protected function getTwig()
     {
         $twig = new Twig_Environment(
-            new Twig_Loader_String()
+            new Twig_Loader_Filesystem([sys_get_temp_dir()])
         );
 
         return $twig;
     }
+
+
+    /**
+     * Get cache.
+     *
+     * @access protected
+     * @param  string                            $cacheDir  (default: '')
+     * @param  string                            $extension (default: 'proc')
+     * @return \JonnyW\PhantomJs\Cache\FileCache
+     */
+    protected function getCache($cacheDir = '', $extension = 'proc')
+    {
+        $cache = new FileCache(($cacheDir ? $cacheDir : sys_get_temp_dir()), 'proc');
+
+        return $cache;
+    }    
 }

@@ -8,6 +8,8 @@
  */
 namespace JonnyW\PhantomJs\Template;
 
+use JonnyW\PhantomJs\Cache\CacheInterface;
+
 /**
  * PHP PhantomJs
  *
@@ -24,14 +26,23 @@ class TemplateRenderer implements TemplateRendererInterface
     protected $twig;
 
     /**
+     * Cache handler.
+     *
+     * @var \JonnyW\PhantomJs\Cache\CacheInterface
+     * @access protected
+     */
+    protected $cacheHandler;
+
+    /**
      * Internal constructor.
      *
      * @access public
      * @param \Twig_Environment $twig
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Twig_Environment $twig, CacheInterface $cacheHandler)
     {
         $this->twig = $twig;
+        $this->cacheHandler = $cacheHandler;
     }
 
     /**
@@ -44,6 +55,13 @@ class TemplateRenderer implements TemplateRendererInterface
      */
     public function render($template, array $context = array())
     {
-        return $this->twig->render($template, $context);
+        $hash = hash('md5', $template);
+        $file = $hash . '.twig';
+
+        if (!$this->cacheHandler->exists($file)) {
+            $this->cacheHandler->save($file, $template);
+        }
+
+        return $this->twig->render($file, $context);
     }
 }

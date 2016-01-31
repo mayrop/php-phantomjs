@@ -123,28 +123,32 @@ services:
         class: "%phantomjs.template.template_renderer.class%"
         arguments:
             - "@phantomjs.twig.environment"
+            - "@phantomjs.cache.file_cache"
         public: false
 
     phantomjs.twig.environment:
         class: "%phantomjs.twig.environment.class%"
         arguments:
-            - "@phantomjs.twig.string_loader"
+            - "@phantomjs.twig.loader_filesystem"
         public: false
 
-    phantomjs.twig.string_loader:
-        class: "%phantomjs.twig.string_loader.class%"
+    phantomjs.twig.loader_filesystem:
+        class: "%phantomjs.twig.loader_filesystem.class%"
         public: false
+        arguments:
+            - ["%phantomjs.cache_dir%"]
 
     phantomjs.procedure.template_renderer:
         class: "%phantomjs.template.template_renderer.class%"
         arguments:
             - "@phantomjs.procedure.twig.environment"
+            - "@phantomjs.cache.file_cache"
         public: false
 
     phantomjs.procedure.twig.environment:
         class: "%phantomjs.twig.environment.class%"
         arguments:
-            - "@phantomjs.twig.string_loader"
+            - "@phantomjs.twig.loader_filesystem"
         public: false
         calls:
             - [ "setLexer", [ "@phantomjs.procedure.twig.lexer" ] ]
