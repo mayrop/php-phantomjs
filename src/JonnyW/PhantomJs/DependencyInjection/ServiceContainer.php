@@ -33,12 +33,12 @@ class ServiceContainer extends ContainerBuilder
      * @access public
      * @return \JonnyW\PhantomJs\Client
      */
-    public static function getInstance()
+    public static function getInstance($params = [])
     {
         if (!self::$instance instanceof ServiceContainer) {
 
             self::$instance = new ServiceContainer();
-            self::$instance->load();
+            self::$instance->load($params);
         }
 
         return self::$instance;
@@ -50,7 +50,7 @@ class ServiceContainer extends ContainerBuilder
      * @access public
      * @return void
      */
-    public function load()
+    public function load($params = [])
     {
         $loader = new YamlFileLoader($this, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('config.yml');
@@ -58,5 +58,9 @@ class ServiceContainer extends ContainerBuilder
 
         $this->setParameter('phantomjs.cache_dir', sys_get_temp_dir());
         $this->setParameter('phantomjs.resource_dir', __DIR__.'/../Resources');
+
+        foreach ($params as $param => $value) {
+            $this->setParameter('phantomjs.' . $param, $value);
+        }
     }
 }
